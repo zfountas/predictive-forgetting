@@ -1,0 +1,33 @@
+# Data
+data/
+runs/
+mi_results/
+mi_figs/
+stats_cache/
+figs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# W&B
+wandb/
+.wandb/
+
+# Jupyter
+.ipynb_checkpoints/
