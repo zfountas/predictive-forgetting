@@ -2,8 +2,8 @@
 
 Code for reproducing the experiments in:
 
-> **Consolidation as predictive forgetting**
-> Zafeirios Fountas et al.
+> **Why the Brain Consolidates: Predictive Forgetting for Optimal Generalisation**
+> Zafeirios Fountas Haitham Bou-Ammar, Jun Wang, Neil Burgess
 
 This repository contains the full pipeline for training, evaluating, and visualising
 the autoencoder (AE) and Langevin Predictive Coding (LPC) experiments, as well as
@@ -205,10 +205,10 @@ runs/<experiment_name>/
 ## Citation
 
 ```bibtex
-@article{fountas2025consolidation,
+@article{fountas2026predictiveforgetting,
   title={Consolidation as predictive forgetting},
-  author={Fountas, Zafeirios and others},
-  year={2025}
+  author={Fountas, Zafeirios and Bou-Ammar, Haitham and Wang, Jun and Burgess, Neil},
+  year={2026}
 }
 ```
 
