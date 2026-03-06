@@ -3,7 +3,7 @@
 Code for reproducing the experiments in:
 
 > **Why the Brain Consolidates: Predictive Forgetting for Optimal Generalisation**
-> Zafeirios Fountas, Haitham Bou-Ammar, Jun Wang, Neil Burgess
+> Zafeirios Fountas, Adnan Oomerjee, Haitham Bou-Ammar, Jun Wang, Neil Burgess
 >
 > Paper: [arXiv:2603.04688](https://arxiv.org/abs/2603.04688)
 
@@ -212,10 +212,15 @@ runs/<experiment_name>/
 ## Citation
 
 ```bibtex
-@article{fountas2026predictiveforgetting,
-  title={Consolidation as predictive forgetting},
-  author={Fountas, Zafeirios and Bou-Ammar, Haitham and Wang, Jun and Burgess, Neil},
-  year={2026}
+@misc{fountas2026predictiveforgetting,
+  title         = {Why the Brain Consolidates: Predictive Forgetting
+                   for Optimal Generalisation},
+  author        = {Zafeirios Fountas and Adnan Oomerjee and
+                   Haitham Bou-Ammar and Jun Wang and Neil Burgess},
+  year          = {2026},
+  eprint        = {2603.04688},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2603.04688}
 }
 ```
 
