@@ -3,7 +3,9 @@
 Code for reproducing the experiments in:
 
 > **Why the Brain Consolidates: Predictive Forgetting for Optimal Generalisation**
-> Zafeirios Fountas Haitham Bou-Ammar, Jun Wang, Neil Burgess
+> Zafeirios Fountas, Haitham Bou-Ammar, Jun Wang, Neil Burgess
+>
+> Paper: [arXiv:2603.04688](https://arxiv.org/abs/2603.04688)
 
 This repository contains the full pipeline for training, evaluating, and visualising
 the autoencoder (AE) and Langevin Predictive Coding (LPC) experiments, as well as
@@ -29,6 +31,7 @@ predictive-forgetting/
 ├── lpc_generate_latents_for_plotting.py  # Generate latents for Figure 4
 ├── kv_motion_figure.py           # KV cache motion analysis (Figure 5)
 ├── plot_grand_average.py         # Grand-average cache refinement (Figure 5e)
+├── sample_data/                  # Pre-computed KV cache logs for Figure 5
 ├── scripts/                      # Shell scripts to reproduce each figure
 │   ├── run_figure2.sh
 │   ├── run_figure3.sh
@@ -42,7 +45,7 @@ predictive-forgetting/
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/predictive-forgetting.git
+git clone https://github.com/zfountas/predictive-forgetting.git
 cd predictive-forgetting
 pip install -r requirements.txt
 ```
@@ -70,6 +73,10 @@ bash scripts/run_figure5.sh
 bash scripts/run_figureS1.sh
 ```
 
+**Compute requirements:** Figures 2 and S1 involve training 100 models (5 datasets x 20 seeds)
+and are the most compute-intensive (~2-4 GPU-hours per model on a single GPU).
+Figures 3 and 4 require ~1-2 GPU-hours each. Figure 5 analysis runs in minutes on CPU.
+
 ## Reproducing Individual Figures
 
 ### Figure 2: Iterative refinement tightens the generalisation bound
@@ -92,7 +99,7 @@ python ae_experiment.py \
     --no_wandb
 ```
 
-Repeat for datasets: `mnist`, `fashion`, `cifar10`, `svhn`, `emnist` and seeds 121–140.
+Repeat for datasets: `mnist`, `fashion`, `cifar10`, `svhn`, `emnist` and seeds 121-140.
 
 Then compute and plot mutual information:
 
@@ -112,7 +119,7 @@ python lpc_experiment.py \
     --seed 124 \
     --p2_head_hidden 512 \
     --p3_head_hidden 512 \
-    --p3_inf_noise 0.05 \
+    --p3_noise_wake 0.05 \
     --out runs/lpc_fashion_s124 \
     --no_wandb
 
@@ -131,7 +138,7 @@ for lat in 32 64 128 256 512 1024; do
         --seed 124 \
         --p2_head_hidden 512 \
         --p3_head_hidden 512 \
-        --p3_inf_noise 0.05 \
+        --p3_noise_wake 0.05 \
         --out runs/capacity_lat${lat}_s124 \
         --no_wandb
     python lpc_generate_latents_for_plotting.py runs/capacity_lat${lat}_s124

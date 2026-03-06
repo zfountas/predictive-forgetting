@@ -45,7 +45,7 @@ def generate_latents():
     
     # 3. Define Protocols (MUST MATCH YOUR "WINNING" CONFIG)
     # Wake Settings
-    WAKE_STEPS = args.get('p3_T_train', 5)
+    WAKE_STEPS = args.get('p3_T_wake', 5)
     WAKE_NOISE = 0.2
     WAKE_BETA = 0.001
     

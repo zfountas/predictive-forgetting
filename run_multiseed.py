@@ -106,7 +106,7 @@ def main():
     )
     
     parser.add_argument("--dataset", type=str, required=True,
-                       choices=["mnist", "fashion", "cifar10"],
+                       choices=["mnist", "fashion", "cifar10", "svhn", "emnist"],
                        help="Dataset to use")
     parser.add_argument("--seeds", type=str, default=",".join(str(s) for s in range(121, 141)),
                        help="Comma-separated list of seeds (default: 121-140)")

@@ -14,23 +14,21 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from lpc_experiment import LPCModel, device_auto
 
-# Usage: python plot_dreams.py ./runs/fashion_debug
-run_dir = sys.argv[1] if len(sys.argv) > 1 else "./runs/fashion_debug"
 
-def plot_generative_replay():
+def plot_generative_replay(run_dir):
     # 1. Load Config & Model
     config_path = os.path.join(run_dir, "args.json")
     if not os.path.exists(config_path):
         print(f"Error: args.json not found in {run_dir}")
         return
-        
+
     with open(config_path, "r") as f:
         args = json.load(f)
 
     device = device_auto()
     img_size = 28 if args['dataset'] in ['mnist', 'fashion', 'emnist'] else 32
     in_ch = 1 if args['dataset'] in ['mnist', 'fashion', 'emnist'] else 3
-    
+
     model = LPCModel(in_ch=in_ch, latent=args['latent'], img_size=img_size).to(device)
     ckpt = os.path.join(run_dir, "phase1_lpc_best.pt")
     model.load_state_dict(torch.load(ckpt, map_location=device))
@@ -38,13 +36,19 @@ def plot_generative_replay():
 
     # 2. Get Real Data
     transform = transforms.ToTensor()
-    if args['dataset'] == 'fashion':
+    if args['dataset'] == 'mnist':
+        ds = datasets.MNIST('./data', train=False, download=True, transform=transform)
+    elif args['dataset'] == 'fashion':
         ds = datasets.FashionMNIST('./data', train=False, download=True, transform=transform)
     elif args['dataset'] == 'cifar10':
         ds = datasets.CIFAR10('./data', train=False, download=True, transform=transform)
+    elif args['dataset'] == 'svhn':
+        ds = datasets.SVHN('./data', split='test', download=True, transform=transform)
+    elif args['dataset'] == 'emnist':
+        ds = datasets.EMNIST('./data', split='balanced', train=False, download=True, transform=transform)
     else:
-        ds = datasets.MNIST('./data', train=False, download=True, transform=transform)
-        
+        raise ValueError(f"Unknown dataset: {args['dataset']}")
+
     loader = DataLoader(ds, batch_size=8, shuffle=True)
     x_real, _ = next(iter(loader))
     x_real = x_real.to(device)
@@ -53,7 +57,7 @@ def plot_generative_replay():
     # We first encode to z_fast (Online Perception)
     z0, _, _, _ = model.amortized_encode(x_real)
     z_fast = model.refine_latent(x_real, steps=5, step_size=0.1, detach=True, z_init=z0)[-1]
-    
+
     # Then we Decode (Generative Replay)
     with torch.no_grad():
         x_dream_logits = model.decoder(z_fast)
@@ -61,8 +65,8 @@ def plot_generative_replay():
 
     # 4. Plot Comparison with Residuals
     plt.style.use('seaborn-v0_8-white')
-    fig, axes = plt.subplots(3, 8, figsize=(12, 5))  # Changed to 3 rows
-    
+    fig, axes = plt.subplots(3, 8, figsize=(12, 5))
+
     for i in range(8):
         # Row 1: Real
         img = x_real[i].cpu().permute(1, 2, 0).squeeze()
@@ -79,9 +83,8 @@ def plot_generative_replay():
         if i == 0: axes[1, i].set_title("Sleep (Replay)", fontsize=10, fontweight='bold', color='purple')
 
         # Row 3: The Difference (What was forgotten)
-        # We normalize it to make the noise visible
         diff = torch.abs(x_real[i].cpu() - x_dream[i].cpu()).permute(1, 2, 0).squeeze()
-        if in_ch == 1: axes[2, i].imshow(diff, cmap='inferno') # 'inferno' makes noise pop
+        if in_ch == 1: axes[2, i].imshow(diff, cmap='inferno')
         else: axes[2, i].imshow(diff)
         axes[2, i].axis('off')
         if i == 0: axes[2, i].set_title("Forgotten Noise\n|Input - Replay|", fontsize=10, fontweight='bold', color='red')
@@ -94,4 +97,5 @@ def plot_generative_replay():
     plt.show()
 
 if __name__ == "__main__":
-    plot_generative_replay()
+    run_dir = sys.argv[1] if len(sys.argv) > 1 else "./runs/fashion_debug"
+    plot_generative_replay(run_dir)

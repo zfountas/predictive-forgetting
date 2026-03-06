@@ -30,7 +30,7 @@ try:
     WANDB_AVAILABLE = True
 except ImportError:
     WANDB_AVAILABLE = False
-    print("Warning: wandb not installed. Run 'pip install wandb' to enable experiment tracking.")
+    pass  # wandb not installed; use --no_wandb or install via: pip install wandb
 
 # --------------- Utils ---------------
 
@@ -171,14 +171,10 @@ class ConvEncoder(nn.Module):
 
     @torch.no_grad()
     def encode_deterministic(self, x: torch.Tensor):
-        """Use z for AE. This is the z used for head/refiner training."""
+        """Deterministic encoding: returns z used for head training."""
         h = self.conv(x)
         h = h.view(h.size(0), -1)
-        if hasattr(self, "fc_mu"):
-            mu = self.fc_mu(h)
-            return mu
-        else:
-            return self.fc(h)
+        return self.fc(h)
 
 class ConvDecoder(nn.Module):
     """Mirror decoder with convtranspose; outputs logits in [B, out_ch, img_size, img_size]."""
@@ -694,7 +690,6 @@ def train_phase3_consolidation(mode, lpc_model, z_mem, y_mem, dl_val, dl_test, c
                     # CRITICAL FIX: Convert logits to probabilities [0,1]
                     # The refinement loss (BCEWithLogits) expects targets in [0,1]
                     x_hat = torch.sigmoid(x_hat_logits) 
-                    # x_hat = lpc_model.decoder(z_batch) # Dream # Original (TODO Check if indeed buggy)
                 
                 latents = lpc_model.refine_latent(
                     x_hat, 

@@ -20,7 +20,7 @@ for dataset in $DATASETS; do
         --dataset "$dataset" \
         --p2_head_hidden 512 \
         --p3_head_hidden 512 \
-        --p3_inf_noise 0.05 \
+        --p3_noise_wake 0.05 \
         --no_wandb
 done
 

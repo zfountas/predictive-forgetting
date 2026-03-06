@@ -30,7 +30,7 @@ try:
     WANDB_AVAILABLE = True
 except ImportError:
     WANDB_AVAILABLE = False
-    print("Warning: wandb not installed. Run 'pip install wandb' to enable experiment tracking.")
+    pass  # wandb not installed; use --no_wandb or install via: pip install wandb
 
 # --------------- Utils ---------------
 
@@ -1186,7 +1186,6 @@ def main():
     )
     head = ClassifierHead(in_dim=args.latent, n_classes=n_classes,
                           hidden=args.p2_head_hidden, p_drop=args.p2_dropout).to(device)
-    #head = train_phase2_head(ae.encoder, head, dl_train, dl_val, dl_test, p2cfg, device, args.out)
     head = train_phase2_head(ae.encoder, head, dlA, dl_val, dl_test, p2cfg, device, args.out)
 
 

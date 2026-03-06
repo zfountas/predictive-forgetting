@@ -31,3 +31,6 @@ wandb/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Paper source (LaTeX)
+paper/
