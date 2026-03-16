@@ -8,9 +8,9 @@ Make a 3-panel figure for a single GSM8K log:
 (C) Mean relative movement of K vs V across refinement steps
 
 Usage examples:
-  python kv_motion_figure.py 17 --data_dir sample_data --layer 0 --step -1 --out kv_motion_log17
+  python src/kv_motion_figure.py 17 --data_dir sample_data --layer 0 --step -1 --out kv_motion_log17
 
-  python kv_motion_figure.py --log_path sample_data/log_17 --layer 0 --step -1
+  python src/kv_motion_figure.py --log_path sample_data/log_17 --layer 0 --step -1
 """
 
 import argparse

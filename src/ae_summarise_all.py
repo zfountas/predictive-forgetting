@@ -8,8 +8,8 @@ Summarize consolidation runs into:
   • Text + CSV summary with the most important stats (mean±sd across seeds)
 
 Usage examples:
-  python ae_summarise_all.py --runs_dir runs --recursive
-  python ae_summarise_all.py --runs_dir runs --recursive --datasets mnist fashion
+  python src/ae_summarise_all.py --runs_dir runs --recursive
+  python src/ae_summarise_all.py --runs_dir runs --recursive --datasets mnist fashion
 """
 
 import argparse, json, re

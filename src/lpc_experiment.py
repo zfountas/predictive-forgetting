@@ -10,7 +10,7 @@ Three-phase pipeline:
 Supports datasets: MNIST, Fashion-MNIST, EMNIST, CIFAR-10, SVHN.
 
 Usage:
-  python lpc_experiment.py --dataset cifar10 --latent 512 --seed 123 --out runs/cifar10_s123
+  python src/lpc_experiment.py --dataset cifar10 --latent 512 --seed 123 --out runs/cifar10_s123
 """
 import argparse, os, math, random, json, time, csv
 from dataclasses import dataclass

@@ -4,8 +4,8 @@ Plot mutual information figures from CSV outputs of ae_compute_mi.py.
 Generates: I(Y;Z_T) curves, I(X;Z_T) curves, and I(X;Z) vs I(Y;Z) scatter.
 
 Usage:
-  python ae_plot_mi_from_csv.py --results-dir mi_results --outdir mi_figs
-  python ae_plot_mi_from_csv.py --results-dir mi_results --dataset mnist --split test
+  python src/ae_plot_mi_from_csv.py --results-dir mi_results --outdir mi_figs
+  python src/ae_plot_mi_from_csv.py --results-dir mi_results --dataset mnist --split test
 """
 
 import argparse, os

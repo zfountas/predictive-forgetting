@@ -2,7 +2,7 @@
 Plot single-run results: Phase 3 accuracy curves and T-sweep analysis.
 
 Usage:
-  python ae_plots.py runs/mnist_ponder_s123
+  python src/ae_plots.py runs/mnist_ponder_s123
 """
 import json, csv, os, sys
 import matplotlib.pyplot as plt

@@ -5,7 +5,7 @@ Panel A: Generalisation gap (online vs replay).
 Panel B: Representational energy (latent norm distributions).
 
 Usage:
-  python lpc_plot_fig4.py runs/cifar10_lat512_s123
+  python src/lpc_plot_fig4.py runs/cifar10_lat512_s123
 """
 import json
 import os
@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Usage: python plot_paper_figure4.py ./runs/lpc_exp1_s123
+# Usage: python src/lpc_plot_fig4.py ./runs/lpc_exp1_s123
 run_dir = sys.argv[1] if len(sys.argv) > 1 else "./runs/lpc_exp1_s121"
 
 def load_history(mode):

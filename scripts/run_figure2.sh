@@ -16,7 +16,7 @@ for dataset in $DATASETS; do
     for seed in $SEEDS; do
         out_dir="runs/${dataset}_ponder_s${seed}"
         echo "=== Training: dataset=$dataset seed=$seed ==="
-        python ae_experiment.py \
+        python src/ae_experiment.py \
             --out "$out_dir" \
             --seed "$seed" \
             --dataset "$dataset" \
@@ -38,18 +38,18 @@ done
 
 # Phase B: Export latent representations
 echo "=== Exporting representations ==="
-python ae_export_reprs.py runs --replace-existing
+python src/ae_export_reprs.py runs --replace-existing
 
 # Phase C: Compute mutual information
 echo "=== Computing MI ==="
-python ae_compute_mi.py --runs-dir runs --outdir mi_results
+python src/ae_compute_mi.py --runs-dir runs --outdir mi_results
 
 # Phase D: Plot MI figures
 echo "=== Plotting MI figures ==="
-python ae_plot_mi_from_csv.py --results-dir mi_results --outdir mi_figs
+python src/ae_plot_mi_from_csv.py --results-dir mi_results --outdir mi_figs
 
 # Phase E: Summarise all runs
 echo "=== Summarising ==="
-python ae_summarise_all.py --runs_dir runs --recursive
+python src/ae_summarise_all.py --runs_dir runs --recursive
 
 echo "=== Done! Figures saved in mi_figs/ ==="

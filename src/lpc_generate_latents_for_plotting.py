@@ -5,7 +5,7 @@ Saves latents_online.npy and latents_replay.npy in the run directory,
 which are then used by lpc_plot_fig4.py.
 
 Usage:
-  python lpc_generate_latents_for_plotting.py runs/cifar10_lat512_s123
+  python src/lpc_generate_latents_for_plotting.py runs/cifar10_lat512_s123
 """
 import torch
 import os, sys, json
@@ -13,7 +13,7 @@ import numpy as np
 from torch.utils.data import DataLoader
 from lpc_experiment import LPCModel, device_auto, get_dataloaders
 
-# Usage: python generate_latents_for_plotting.py ./runs/lpc_exp1_s121
+# Usage: python src/lpc_generate_latents_for_plotting.py ./runs/lpc_exp1_s121
 run_dir = sys.argv[1] if len(sys.argv) > 1 else "./runs/lpc_exp1_s121"
 
 def generate_latents():

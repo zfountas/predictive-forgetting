@@ -7,7 +7,7 @@ global update fraction varies across transformer layers, revealing the
 transition from global renormalization to selective editing.
 
 Usage:
-  python plot_grand_average.py --stats_dir stats_cache --out fig_grand_average.svg
+  python src/plot_grand_average.py --stats_dir stats_cache --out fig_grand_average.svg
 """
 import pandas as pd
 import glob

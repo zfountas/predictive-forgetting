@@ -2,7 +2,7 @@
 Plot LPC experiment results: generalisation gap, test accuracy, and latent norms.
 
 Usage:
-  python lpc_plots.py runs/lpc_exp1_s121
+  python src/lpc_plots.py runs/lpc_exp1_s121
 """
 import json, os, sys
 import matplotlib.pyplot as plt

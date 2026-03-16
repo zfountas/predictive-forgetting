@@ -67,7 +67,7 @@ def run_experiment_with_seeds(
         
         # Build command
         cmd = [
-            "python", "ae_experiment.py",
+            "python", "src/ae_experiment.py",
             "--dataset", dataset,
             "--seed", str(seed),
             "--mode", mode,
