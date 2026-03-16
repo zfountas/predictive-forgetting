@@ -13,7 +13,7 @@ Outputs:
   - mi_stats_Iyz.csv, mi_stats_Ixz.csv (aggregated across seeds)
 
 Usage:
-  python ae_compute_mi.py --runs-dir runs --outdir mi_results
+  python src/ae_compute_mi.py --runs-dir runs --outdir mi_results
 
 After that, use ae_plot_mi_from_csv.py to draw figures.
 """

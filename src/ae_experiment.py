@@ -10,7 +10,7 @@ Three-phase pipeline:
 Supports datasets: MNIST, Fashion-MNIST, EMNIST, CIFAR-10, SVHN.
 
 Usage:
-  python ae_experiment.py --dataset mnist --mode ponder --T 4 --seed 123 --out runs/mnist_s123
+  python src/ae_experiment.py --dataset mnist --mode ponder --T 4 --seed 123 --out runs/mnist_s123
 """
 import argparse, os, math, random, json, time, csv
 from dataclasses import dataclass

@@ -14,7 +14,7 @@ DATASETS="mnist fashion cifar10 svhn emnist"
 for dataset in $DATASETS; do
     out_dir="runs/lpc_${dataset}_s124"
     echo "=== Training LPC: dataset=$dataset ==="
-    python lpc_experiment.py \
+    python src/lpc_experiment.py \
         --out "$out_dir" \
         --seed 124 \
         --dataset "$dataset" \
@@ -28,7 +28,7 @@ done
 for dataset in $DATASETS; do
     out_dir="runs/lpc_${dataset}_s124"
     echo "=== Generating dreams: $dataset ==="
-    python lpc_plot_dream.py "$out_dir"
+    python src/lpc_plot_dream.py "$out_dir"
 done
 
 echo "=== Done! Dream figures saved in each run directory ==="

@@ -5,7 +5,7 @@ Shows real inputs (wake), dream reconstructions (sleep), and the difference
 (forgotten noise) for qualitative assessment of consolidation.
 
 Usage:
-  python lpc_plot_dream.py runs/fashion_lpc_s123
+  python src/lpc_plot_dream.py runs/fashion_lpc_s123
 """
 import torch
 import matplotlib.pyplot as plt

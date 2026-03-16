@@ -5,7 +5,7 @@ Compares online (wake) vs offline replay (sleep) latent representations using
 t-SNE visualisation and cosine similarity to class prototypes.
 
 Usage:
-  python lpc_plot_for_paper_figs.py runs/lpc_exp1_s123
+  python src/lpc_plot_for_paper_figs.py runs/lpc_exp1_s123
 """
 import torch
 import matplotlib.pyplot as plt

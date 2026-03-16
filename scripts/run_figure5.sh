@@ -13,9 +13,10 @@ set -e
 
 # Plot KV cache motion for a single example (panels a-c)
 if ls sample_data/log_* 1> /dev/null 2>&1; then
-    echo "=== Plotting KV motion figure ==="
-    python kv_motion_figure.py \
-        --log_path sample_data/log_17 \
+    FIRST_LOG=$(ls sample_data/log_* | head -n 1)
+    echo "=== Plotting KV motion figure (using ${FIRST_LOG}) ==="
+    python src/kv_motion_figure.py \
+        --log_path "$FIRST_LOG" \
         --layer 0 \
         --step -1 \
         --max_arrows 200 \
@@ -28,7 +29,7 @@ fi
 # Plot grand average across layers (panel e)
 if [ -d "stats_cache" ]; then
     echo "=== Plotting grand average ==="
-    python plot_grand_average.py --stats_dir stats_cache --out fig_grand_average.svg
+    python src/plot_grand_average.py --stats_dir stats_cache --out fig_grand_average.svg
 else
     echo "[SKIP] No stats_cache/ directory found."
     echo "Place bootstrap CSV files in stats_cache/ to generate the grand average figure."

@@ -14,7 +14,7 @@ SEEDS=$(seq 121 140)
 for seed in $SEEDS; do
     out_dir="runs/pareto_mnist_ponder_s${seed}"
     echo "=== Training: seed=$seed ==="
-    python ae_experiment.py \
+    python src/ae_experiment.py \
         --out "$out_dir" \
         --seed "$seed" \
         --dataset mnist \
@@ -35,6 +35,6 @@ done
 
 # Phase B: Summarise results
 echo "=== Summarising ==="
-python ae_summarise_all.py --runs_dir runs --recursive --datasets mnist
+python src/ae_summarise_all.py --runs_dir runs --recursive --datasets mnist
 
 echo "=== Done! ==="

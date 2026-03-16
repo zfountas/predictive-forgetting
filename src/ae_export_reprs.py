@@ -5,8 +5,8 @@ Saves numpy arrays to: runs/<run>/repr/<split>/Teval_<k>/zT.npy
 Required as input for ae_compute_mi.py.
 
 Usage:
-  python ae_export_reprs.py runs/mnist_s123
-  python ae_export_reprs.py runs --replace-existing
+  python src/ae_export_reprs.py runs/mnist_s123
+  python src/ae_export_reprs.py runs --replace-existing
 
 By default, only runs without a repr/ subfolder are processed.
 Pass --replace-existing to re-export.
