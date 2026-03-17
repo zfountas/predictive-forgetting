@@ -13,5 +13,10 @@ a list of steps, each step being a list of layer dictionaries with keys:
 For the bootstrap analysis (grand average plot), place per-log CSV files in
 `../stats_cache/` with columns: `layer`, `ratio`, `ci_width`.
 
-**Note:** The pre-computed KV cache data will be uploaded to Figshare and a
-download link will be provided here soon.
+**Data availability:** The pre-computed KV cache data (100 example logs) is
+publicly available on Figshare:
+
+https://doi.org/10.6084/m9.figshare.31534807
+
+The full dataset (~60GB, N=1318 logs) is available upon reasonable request
+to the corresponding author (zafeirios.fountas@huawei.com).
