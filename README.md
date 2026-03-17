@@ -150,9 +150,18 @@ python src/lpc_plot_fig4.py runs/capacity_cifar10_lat512_s124
 
 ### Figure 5: LLM KV cache refinement
 
-The LLM experiments require Llama-3-8B-Instruct and the bottlenecked transformer
-infrastructure. The analysis scripts operate on pre-computed KV cache data:
+The LLM experiments require Llama-3 and the bottlenecked transformer
+infrastructure. The analysis scripts operate on pre-computed KV cache data.
 
+**Data:** A curated set of 100 pre-computed KV cache logs is publicly available on Figshare:
+
+> Fountas, Z. & Oomerjee, A. (2026). *KV Cache Consolidation Logs — Predictive
+> Forgetting for Optimal Generalisation (Figure 5)*. Figshare.
+> https://doi.org/10.6084/m9.figshare.31534807
+
+Download these files and place them in `sample_data/` before running the scripts below.
+The full dataset (~60 GB, N=1,318 logs) is available upon reasonable request to the
+corresponding author (zafeirios.fountas@huawei.com).
 ```bash
 # Plot KV cache motion for a single example
 # (replace with any existing sample_data/log_* file)
