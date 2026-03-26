@@ -1,4 +1,4 @@
-# Predictive Forgetting: A Computational Theory of Memory Consolidation
+# Predictive Forgetting
 
 Code for reproducing the experiments in:
 
@@ -7,40 +7,27 @@ Code for reproducing the experiments in:
 >
 > Paper: [arXiv:2603.04688](https://arxiv.org/abs/2603.04688)
 
-This repository contains the full pipeline for training, evaluating, and visualising
-the autoencoder (AE) and Langevin Predictive Coding (LPC) experiments, as well as
-analysis scripts for the LLM key-value cache consolidation experiments.
+This repository contains the full pipeline for the autoencoder (AE) refinement experiments, the Langevin Predictive Coding (LPC) wake/sleep experiments, and the analysis scripts for the LLM key-value cache consolidation experiments reported in the paper.
 
-## Repository Structure
+## System Requirements
 
-```
-predictive-forgetting/
-├── src/ae_experiment.py              # AE refinement pipeline (Figures 2, S1)
-├── src/lpc_experiment.py             # LPC wake/sleep pipeline (Figures 3, 4)
-├── src/run_multiseed.py              # Multi-seed experiment runner
-├── src/ae_export_reprs.py            # Export latent representations for MI
-├── src/ae_compute_mi.py              # Compute mutual information proxies
-├── src/ae_summarise_all.py           # Aggregate results across seeds
-├── src/api_adapter.py                # Model loading bridge
-├── src/ae_plots.py                   # Single-run result plotting
-├── src/ae_plot_mi_from_csv.py        # MI curve plotting
-├── src/lpc_plots.py                  # LPC result plotting
-├── src/lpc_plot_dream.py             # Dream visualisation (Figure 3c)
-├── src/lpc_plot_fig4.py              # Capacity sweep figure (Figure 4)
-├── src/lpc_plot_for_paper_figs.py    # t-SNE and alignment figures
-├── src/lpc_generate_latents_for_plotting.py  # Generate latents for Figure 4
-├── src/kv_motion_figure.py           # KV cache motion analysis (Figure 5)
-├── src/plot_grand_average.py         # Grand-average cache refinement (Figure 5e)
-├── sample_data/                  # Pre-computed KV cache logs for Figure 5
-├── scripts/                      # Shell scripts to reproduce each figure
-│   ├── run_figure2.sh
-│   ├── run_figure3.sh
-│   ├── run_figure4.sh
-│   ├── run_figure5.sh
-│   └── run_figureS1.sh
-├── requirements.txt
-└── LICENSE
-```
+### Software dependencies
+
+- Python 3.8+ (tested with Python 3.10)
+- PyTorch 1.10+ (tested with PyTorch 2.1, CUDA 12.1)
+- NumPy ≥ 1.20, SciPy ≥ 1.7, pandas ≥ 1.3, matplotlib ≥ 3.4, seaborn ≥ 0.11
+- scikit-learn ≥ 1.0 (optional, for t-SNE visualisations)
+- Full dependency list: [`requirements.txt`](requirements.txt)
+
+### Operating systems
+
+Tested on Ubuntu Linux (Google Colab). Compatible with any OS supporting Python and PyTorch (Linux, macOS, Windows).
+
+### Hardware
+
+- **Figures 2–4 and Extended Data Fig. 1** (AE and LPC experiments): A single NVIDIA GPU (e.g., A100, V100, or RTX 3090) is recommended. CPU execution is supported but significantly slower.
+- **Figure 5** (LLM KV cache analysis): Runs on CPU in minutes using pre-computed data. Full LLM pipeline requires ≥ 40 GB GPU VRAM (e.g., NVIDIA A100) for Llama-3 inference.
+- **Minimum RAM**: 8 GB (16 GB recommended for LLM analysis).
 
 ## Installation
 
@@ -50,39 +37,11 @@ cd predictive-forgetting
 pip install -r requirements.txt
 ```
 
-Requires Python 3.8+ and PyTorch 1.10+. A CUDA-capable GPU is recommended.
+Typical install time: **~5 minutes** on a standard desktop computer (excluding PyTorch/CUDA setup, which varies by system).
 
-## Quick Start
+## Demo
 
-To reproduce all figures:
-
-```bash
-# Figure 2: AE refinement across 5 datasets
-bash scripts/run_figure2.sh
-
-# Figure 3: Wake/sleep dream visualisation
-bash scripts/run_figure3.sh
-
-# Figure 4: Capacity-generalisation sweep
-bash scripts/run_figure4.sh
-
-# Figure 5: LLM KV cache analysis (requires pre-computed data)
-bash scripts/run_figure5.sh
-
-# Extended Data Figure S1: Pareto frontier
-bash scripts/run_figureS1.sh
-```
-
-**Compute requirements:** Figures 2 and S1 together involve training 120 models
-(Figure 2: 5 datasets x 20 seeds = 100 models; Figure S1: 1 dataset x 20 seeds = 20 models),
-and are the most compute-intensive (~2-4 GPU-hours per model on a single GPU).
-Figures 3 and 4 require ~1-2 GPU-hours each. Figure 5 analysis runs in minutes on CPU.
-
-## Reproducing Individual Figures
-
-### Figure 2: Iterative refinement tightens the generalisation bound
-
-Train the autoencoder with PonderNet-style adaptive refinement:
+A quick demo reproduces the core result (Figure 2) on MNIST with a single seed:
 
 ```bash
 python src/ae_experiment.py \
@@ -96,128 +55,57 @@ python src/ae_experiment.py \
     --p3_epochs 50 \
     --p3_crossfit_ratio 0.5 \
     --seed 121 \
-    --out runs/mnist_ponder_s121 \
+    --out runs/demo \
     --no_wandb
 ```
 
-Repeat for datasets: `mnist`, `fashion`, `cifar10`, `svhn`, `emnist` and seeds 121-140.
+**Expected output:** The run directory `runs/demo/` will contain:
+- `phase2_summary.json` — baseline classifier accuracy (expected test accuracy ~0.975 on MNIST)
+- `phase3_summary.json` — refined accuracy and generalisation gap after consolidation
+- `phase3_Tsweep.csv` — accuracy and generalisation gap at each refinement step (T=0 to T=4), showing monotonic gap reduction consistent with Figure 2c
 
-Then compute and plot mutual information:
+**Expected run time:** ~10–15 minutes on a single GPU; ~1–2 hours on CPU.
 
-```bash
-python src/ae_export_reprs.py runs --replace-existing
-python src/ae_compute_mi.py --runs-dir runs --outdir mi_results
-python src/ae_plot_mi_from_csv.py --results-dir mi_results --outdir mi_figs
+## Reproducing All Figures
+
+Shell scripts are provided to reproduce each figure in the paper. Detailed instructions, including hyperparameter tables and per-figure commands, are in [`REPRODUCE.md`](REPRODUCE.md).
+
+| Figure | Script | Description | Estimated GPU time |
+|--------|--------|-------------|--------------------|
+| Figure 2 | `bash scripts/run_figure2.sh` | AE refinement across 5 datasets (20 seeds each) | ~2–4 hours per dataset × seed |
+| Figure 3 | `bash scripts/run_figure3.sh` | Wake/sleep dream visualisation | ~1–2 hours per dataset |
+| Figure 4 | `bash scripts/run_figure4.sh` | Capacity–generalisation sweep on CIFAR-10 | ~6–12 hours total |
+| Figure 5 | `bash scripts/run_figure5.sh` | LLM KV cache analysis (pre-computed data) | Minutes (CPU) |
+| Ext. Data Fig. 1 | `bash scripts/run_figureS1.sh` | Fidelity–generalisation frontier | ~10–20 hours total |
+
+## Data
+
+All image classification datasets (MNIST, Fashion-MNIST, EMNIST, CIFAR-10, SVHN) are downloaded automatically via `torchvision` on first run.
+
+Pre-computed KV cache data for Figure 5 (100 example logs) is available on Figshare:
+
+> Fountas, Z. & Oomerjee, A. (2026). *KV Cache Consolidation Logs — Predictive Forgetting for Optimal Generalisation (Figure 5)*. Figshare.  
+> [https://doi.org/10.6084/m9.figshare.31534807](https://doi.org/10.6084/m9.figshare.31534807)
+
+Download and place the log files in `sample_data/` before running `scripts/run_figure5.sh`. The full dataset (~60 GB, N=1,318 logs) is available upon reasonable request to the corresponding author.
+
+## Repository Structure
+
 ```
-
-### Figure 3: Bidirectional consolidation mechanism
-
-Train LPC models and generate dream visualisations:
-
-```bash
-python src/lpc_experiment.py \
-    --dataset fashion \
-    --seed 124 \
-    --p2_head_hidden 512 \
-    --p3_head_hidden 512 \
-    --p3_noise_wake 0.05 \
-    --out runs/lpc_fashion_s124 \
-    --no_wandb
-
-python src/lpc_plot_dream.py runs/lpc_fashion_s124
-```
-
-### Figure 4: Capacity-generalisation trade-off
-
-Sweep latent dimension on CIFAR-10:
-
-```bash
-for lat in 32 64 128 256 512 1024; do
-    python src/lpc_experiment.py \
-        --dataset cifar10 \
-        --latent $lat \
-        --seed 124 \
-        --p2_head_hidden 512 \
-        --p3_head_hidden 512 \
-        --p3_noise_wake 0.05 \
-        --out runs/capacity_cifar10_lat${lat}_s124 \
-        --no_wandb
-    python src/lpc_generate_latents_for_plotting.py runs/capacity_cifar10_lat${lat}_s124
-done
-
-python src/lpc_plot_fig4.py runs/capacity_cifar10_lat512_s124
-```
-
-### Figure 5: LLM KV cache refinement
-
-The LLM experiments require Llama-3 and the bottlenecked transformer
-infrastructure. The analysis scripts operate on pre-computed KV cache data.
-
-**Data:** A curated set of 100 pre-computed KV cache logs is publicly available on Figshare:
-
-> Fountas, Z. & Oomerjee, A. (2026). *KV Cache Consolidation Logs — Predictive
-> Forgetting for Optimal Generalisation (Figure 5)*. Figshare.
-> https://doi.org/10.6084/m9.figshare.31534807
-
-Download these files and place them in `sample_data/` before running the scripts below.
-The full dataset (~60 GB, N=1,318 logs) is available upon reasonable request to the
-corresponding author (zafeirios.fountas@huawei.com).
-```bash
-# Plot KV cache motion for a single example
-# (replace with any existing sample_data/log_* file)
-python src/kv_motion_figure.py --log_path sample_data/log_17 --layer 0 --step -1
-
-# Plot grand-average hierarchical refinement
-python src/plot_grand_average.py --stats_dir stats_cache --out fig_grand_average.svg
-```
-
-## Key Hyperparameters
-
-| Component | Parameter | Default |
-|-----------|-----------|---------|
-| Data | batch_size | 128 |
-| Encoder/Decoder (Phase 1) | epochs | 30 |
-| | learning_rate | 1e-3 |
-| | weight_decay | 1e-4 |
-| Readout (Phase 2) | epochs | 15 |
-| | learning_rate | 5e-4 |
-| | hidden_dim | 128 |
-| Refiner (Phase 3) | T (steps) | 4 |
-| | ref_hidden | 128 |
-| | epochs | 50 |
-| | label_smoothing | 0.05 |
-| | z_noise | 0.05 |
-| PonderNet | lambda | 0.4 |
-| | beta_ponder | 0.02 |
-| Cross-fit | ratio | 0.5 |
-| MI proxy | sigma | 0.1 |
-
-See Table 2 in the paper for full details.
-
-## Datasets
-
-All datasets are downloaded automatically via torchvision:
-- **MNIST** (28x28, grayscale, 10 classes)
-- **Fashion-MNIST** (28x28, grayscale, 10 classes)
-- **EMNIST** (28x28, grayscale, 47 classes, balanced split)
-- **CIFAR-10** (32x32, RGB, 10 classes)
-- **SVHN** (32x32, RGB, 10 classes)
-
-## Output Structure
-
-Each experiment run produces:
-```
-runs/<experiment_name>/
-├── args.json              # Saved hyperparameters
-├── phase1_best.pt         # Encoder/decoder checkpoint
-├── phase2_head_best.pt    # Classifier head checkpoint
-├── phase3_refiner_best.pt # Refiner checkpoint (AE only)
-├── phase2_summary.json    # Phase 2 accuracy metrics
-├── phase3_summary.json    # Phase 3 accuracy metrics
-├── phase3_history.json    # Per-epoch training curves
-├── phase3_Tsweep.csv      # Accuracy vs refinement steps
-└── repr/                  # Exported latent representations
-    └── <split>/Teval_<k>/zT.npy
+predictive-forgetting/
+├── src/
+│   ├── ae_experiment.py          # AE refinement pipeline (Figures 2, Ext. Data Fig. 1)
+│   ├── lpc_experiment.py         # LPC wake/sleep pipeline (Figures 3, 4)
+│   ├── ae_compute_mi.py          # Mutual information proxy computation
+│   ├── ae_export_reprs.py        # Export latent representations for MI analysis
+│   ├── kv_motion_figure.py       # KV cache motion analysis (Figure 5)
+│   ├── plot_grand_average.py     # Grand-average hierarchical refinement (Figure 5e)
+│   └── ...                       # Additional plotting and utility scripts
+├── scripts/                      # Shell scripts to reproduce each figure
+├── sample_data/                  # Pre-computed KV cache logs for Figure 5
+├── requirements.txt
+├── REPRODUCE.md                  # Detailed reproduction instructions
+└── LICENSE                       # MIT License
 ```
 
 ## Citation
@@ -235,18 +123,6 @@ runs/<experiment_name>/
 }
 ```
 
-
-
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
-
-## Lightweight Validation
-
-Before launching expensive GPU runs, you can run a quick repository sanity check:
-
-```bash
-bash scripts/validate_repo.sh
-```
-
-This validates shell script syntax, Python syntax, and key README/script consistency.
+[MIT License](LICENSE)
