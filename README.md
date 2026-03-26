@@ -9,6 +9,8 @@ Code for reproducing the experiments in:
 
 This repository contains the full pipeline for the autoencoder (AE) refinement experiments, the Langevin Predictive Coding (LPC) wake/sleep experiments, and the analysis scripts for the LLM key-value cache consolidation experiments reported in the paper.
 
+Website: [https://predictive-forgetting.github.io/](https://predictive-forgetting.github.io/)
+
 ## System Requirements
 
 ### Software dependencies
